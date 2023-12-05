@@ -25,7 +25,10 @@
 </head>
 <body>
   @yield('form_inputan')
+  @yield('form_edit')
+  @include('flash::message')
   @yield('hasil_inputan')
+  @yield('edit_data_barang')
     <!-- plugins:js -->
     <script src="{{asset("/vendors_template/vendors/js/vendor.bundle.base.js")}}"></script>
     <!-- endinject -->

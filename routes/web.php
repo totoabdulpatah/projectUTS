@@ -27,3 +27,7 @@ Route::get('/delete_test/{id}',[DataBarangController::class, 'hapus_get']);
 Route::get('/utama', function () {
     return view('list_Inventorys');
 });
+Route::get('/delete/{id}', [DataBarangController::class, 'destroy']);
+Route::get('/edit/{id}', [DataBarangController::class, 'edit']);
+Route::get('/update/{id}', [DataBarangController::class, 'update']);
+

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inventorys;
+use Laracast\Flash\Flash;
 
 class DataBarangController extends Controller
 {
@@ -71,27 +72,46 @@ class DataBarangController extends Controller
         //
     }
 
+   
+
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $data_inventory = Inventorys::where('barang_id', $id)->get();
+        return view('edit_data_barang', compact('data_inventory'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $inventory = Inventorys::find($id);
+
+    // Update data berdasarkan input dari form
+    $inventory->update([
+        'kode_barang' => $request->kode_barang,
+        'nama_barang' => $request->nama_barang,
+        'jenis_varian'=>$request->jenis_varian,
+        'qty'=>$request->qty,
+        'harga_jual'=>$request->harga_jual,
+        // Tambahkan atribut lainnya sesuai kebutuhan
+    ]);
+
+    // Redirect ke halaman hasil atau halaman lain yang diinginkan
+    return redirect('/hasil');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $proses = Inventorys::where('barang_id', $id)->delete();
+        if($proses) flash('Data Berhasil di Hapus')->success();
+        if(!$proses) flash('Data gagal di hapus')->error();
+        return redirect('/hasil');
     }
 }
