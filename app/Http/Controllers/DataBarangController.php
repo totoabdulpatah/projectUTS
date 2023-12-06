@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\Inventorys;
 use Laracast\Flash\Flash;
 
@@ -88,21 +89,36 @@ class DataBarangController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $inventory = Inventorys::find($id);
+        
+        $data = [
+            'kode_barang'=>$request->kode_barang,
+            'nama_barang'=>$request->nama_barang,
+            'jenis_varian'=>$request->jenis_varian,
+            'qty'=>$request->qty,
+            'harga_jual'=>$request->harga_jual,
+         ];
+         $total_harga = $data['harga_jual'] * $data['qty'];
+        $diskon = 0;
+        if ($total_harga >= 500000) {
+            $diskon = 50;
+        } elseif ($total_harga >= 200000) {
+            $diskon = 20;
+        } elseif ($total_harga >= 100000) {
+            $diskon = 10;
+        }
+        $harga_setelah_diskon = $total_harga - ($total_harga * ($diskon / 100));
 
-    // Update data berdasarkan input dari form
-    $inventory->update([
-        'kode_barang' => $request->kode_barang,
-        'nama_barang' => $request->nama_barang,
-        'jenis_varian'=>$request->jenis_varian,
-        'qty'=>$request->qty,
-        'harga_jual'=>$request->harga_jual,
+        $data['total_harga'] = $total_harga;
+        $data['diskon'] = $diskon ;
+        $data['harga_setelah_diskon'] = $harga_setelah_diskon;
+        $data_inventory = Inventorys::where('barang_id',$id)->update($data);
         // Tambahkan atribut lainnya sesuai kebutuhan
-    ]);
-
-    // Redirect ke halaman hasil atau halaman lain yang diinginkan
-    return redirect('/hasil');
+    
+        // Redirect ke halaman hasil atau halaman lain yang diinginkan
+        return redirect('/hasil')->with('success', 'Data berhasil diperbarui');
     }
+    
+
 
     /**
      * Remove the specified resource from storage.

@@ -12,7 +12,7 @@
                   <p class="card-description">
                     Basic form layout
                   </p>
-                  <form class="forms-sample" action="/update" method="post">
+                  <form class="forms-sample" action="{{ url('update') . '/' . $data_inventory[0]->barang_id }}" method="post">
                    
                     @csrf
                   
